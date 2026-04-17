@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function About() {
+export default function New() {
   return (
     <View style={styles.container}>
-      <Text>About</Text>
+      <Text>New</Text>
     </View>
   );
 }
