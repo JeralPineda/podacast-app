@@ -1,5 +1,6 @@
-import { Feed } from "@/types";
+import { Episode, Feed } from "@/types";
 import * as Crypto from "expo-crypto";
+export type { Episode, Feed };
 
 // Había un problema con la api secret al parecer cortaba la variable por culpa del signo $, eso me devolvia un 401 en la api.
 // Como se resolvió
