@@ -1,7 +1,7 @@
 import { useSignIn } from "@clerk/expo";
 import { type Href, Link, useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, TextInput, View, Text } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function Page() {
   const { signIn, errors, fetchStatus } = useSignIn();
@@ -20,6 +20,7 @@ export default function Page() {
       console.error(JSON.stringify(error, null, 2));
       return;
     }
+    console.log("🚀 sign-in.tsx -> #23 -> signIn.status ~", signIn.status);
 
     if (signIn.status === "complete") {
       await signIn.finalize({
@@ -100,22 +101,20 @@ export default function Page() {
         />
         {errors.fields.code && <Text style={styles.error}>{errors.fields.code.message}</Text>}
         <Pressable
-          style={({ pressed }) => [
-            styles.button,
-            fetchStatus === "fetching" && styles.buttonDisabled,
-            pressed && styles.buttonPressed,
-          ]}
+          className="bg-[#0a7ea4] py-3 px-6 rounded-lg mt-4 text-center active:opacity-50 disabled:opacity-40"
           onPress={handleVerify}
           disabled={fetchStatus === "fetching"}>
-          <Text style={styles.buttonText}>Verify</Text>
+          <Text className="text-center color-white font-semibold">Verify</Text>
         </Pressable>
         <Pressable
-          style={({ pressed }) => [styles.secondaryButton, pressed && styles.buttonPressed]}
+          style={({ pressed }) => [styles.secondaryButton]}
+          className="disabled:opacity-40"
           onPress={() => signIn.mfa.sendEmailCode()}>
           <Text style={styles.secondaryButtonText}>I need a new code</Text>
         </Pressable>
         <Pressable
-          style={({ pressed }) => [styles.secondaryButton, pressed && styles.buttonPressed]}
+          style={({ pressed }) => [styles.secondaryButton]}
+          className="disabled:opacity-40"
           onPress={() => signIn.reset()}>
           <Text style={styles.secondaryButtonText}>Start over</Text>
         </Pressable>
@@ -151,20 +150,16 @@ export default function Page() {
       />
       {errors.fields.password && <Text style={styles.error}>{errors.fields.password.message}</Text>}
       <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          (!emailAddress || !password || fetchStatus === "fetching") && styles.buttonDisabled,
-          pressed && styles.buttonPressed,
-        ]}
+        className="bg-[#0a7ea4] py-3 px-6 rounded-lg mt-4 text-center active:opacity-50 disabled:opacity-40"
         onPress={handleSubmit}
         disabled={!emailAddress || !password || fetchStatus === "fetching"}>
-        <Text style={styles.buttonText}>Continue</Text>
+        <Text className="text-center color-white font-semibold">Continue</Text>
       </Pressable>
       {/* For your debugging purposes. You can just console.log errors, but we put them in the UI for convenience */}
       {errors && <Text style={styles.debug}>{JSON.stringify(errors, null, 2)}</Text>}
 
       <View style={styles.linkContainer}>
-        <Text>Don't have an account? </Text>
+        <Text>{"Don't have an account?"}</Text>
         <Link href="/sign-up">
           <Text>Sign up</Text>
         </Link>
@@ -193,24 +188,6 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     backgroundColor: "#fff",
-  },
-  button: {
-    backgroundColor: "#0a7ea4",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonPressed: {
-    opacity: 0.7,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
   },
   secondaryButton: {
     paddingVertical: 12,

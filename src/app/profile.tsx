@@ -17,7 +17,7 @@ export default function ProfileScreen() {
       {user?.imageUrl && <Image source={{ uri: user.imageUrl }} style={styles.avatar} />}
       <Text style={styles.name}>{user?.fullName || user?.emailAddresses[0]?.emailAddress}</Text>
       <Pressable
-        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        className="bg-red-500 px-6 py-3 rounded-lg mt-4 active:opacity-50"
         onPress={handleSignOut}>
         <Text style={styles.buttonText}>Sign Out</Text>
       </Pressable>
@@ -41,16 +41,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: "600",
-  },
-  button: {
-    backgroundColor: "#d32f2f",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    marginTop: 16,
-  },
-  buttonPressed: {
-    opacity: 0.7,
   },
   buttonText: {
     color: "#fff",

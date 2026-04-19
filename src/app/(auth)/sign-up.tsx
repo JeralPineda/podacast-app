@@ -1,16 +1,16 @@
 import { useAuth, useSignUp } from "@clerk/expo";
 import { type Href, Link, useRouter } from "expo-router";
-import React from "react";
-import { Pressable, StyleSheet, TextInput, View, Text } from "react-native";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function Page() {
   const { signUp, errors, fetchStatus } = useSignUp();
   const { isSignedIn } = useAuth();
   const router = useRouter();
 
-  const [emailAddress, setEmailAddress] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [code, setCode] = React.useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
 
   const handleSubmit = async () => {
     const { error } = await signUp.password({
@@ -76,17 +76,14 @@ export default function Page() {
         />
         {errors.fields.code && <Text style={styles.error}>{errors.fields.code.message}</Text>}
         <Pressable
-          style={({ pressed }) => [
-            styles.button,
-            fetchStatus === "fetching" && styles.buttonDisabled,
-            pressed && styles.buttonPressed,
-          ]}
+          className="bg-[#0a7ea4] py-3 px-6 rounded-lg mt-4 text-center active:opacity-50 disabled:opacity-40"
           onPress={handleVerify}
           disabled={fetchStatus === "fetching"}>
-          <Text style={styles.buttonText}>Verify</Text>
+          <Text className="text-center color-white font-semibold">Verify</Text>
         </Pressable>
         <Pressable
-          style={({ pressed }) => [styles.secondaryButton, pressed && styles.buttonPressed]}
+          style={({ pressed }) => [styles.secondaryButton]}
+          className="disabled:opacity-40"
           onPress={() => signUp.verifications.sendEmailCode()}>
           <Text style={styles.secondaryButtonText}>I need a new code</Text>
         </Pressable>
@@ -122,14 +119,10 @@ export default function Page() {
       />
       {errors.fields.password && <Text style={styles.error}>{errors.fields.password.message}</Text>}
       <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          (!emailAddress || !password || fetchStatus === "fetching") && styles.buttonDisabled,
-          pressed && styles.buttonPressed,
-        ]}
+        className="bg-[#0a7ea4] py-3 px-6 rounded-lg mt-4 text-center active:opacity-50 disabled:opacity-40"
         onPress={handleSubmit}
         disabled={!emailAddress || !password || fetchStatus === "fetching"}>
-        <Text style={styles.buttonText}>Sign up</Text>
+        <Text className="text-center color-white font-semibold">Sign up</Text>
       </Pressable>
       {/* For your debugging purposes. You can just console.log errors, but we put them in the UI for convenience */}
       {errors && <Text style={styles.debug}>{JSON.stringify(errors, null, 2)}</Text>}
@@ -167,24 +160,6 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     backgroundColor: "#fff",
-  },
-  button: {
-    backgroundColor: "#0a7ea4",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonPressed: {
-    opacity: 0.7,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
   },
   secondaryButton: {
     paddingVertical: 12,
