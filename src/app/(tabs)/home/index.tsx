@@ -20,17 +20,8 @@ export default function Home() {
     <FlatList
       data={data?.feeds}
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => <Text>{item.title}</Text>}
+      renderItem={({ item }) => <Text className="text-neutral-600">{item.title}</Text>}
       contentInsetAdjustmentBehavior="automatic"
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
