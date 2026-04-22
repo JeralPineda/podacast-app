@@ -1,3 +1,4 @@
+import { EpisodesList } from "@/components/episodes-list";
 import { fetchFeedById } from "@/services/podcast-index";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
@@ -56,6 +57,8 @@ export default function PodcastDetails() {
           </Pressable>
         </View>
       ) : null}
+
+      <EpisodesList feedId={id} />
     </ScrollView>
   );
 }

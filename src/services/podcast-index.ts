@@ -64,3 +64,14 @@ export async function fetchFeedById(id: string): Promise<{ feed: Feed } | undefi
     // return { feeds: [] };
   }
 }
+
+export async function fetchEpisodesByFeedId(
+  feedId: string,
+): Promise<{ items: Episode[] } | undefined> {
+  try {
+    const res = await fetchIndex(`/episodes/byfeedid?id=${feedId}`);
+    return res.json();
+  } catch (error) {
+    console.log("🚀 podcast-index.ts -> #73 -> error ~", error);
+  }
+}
