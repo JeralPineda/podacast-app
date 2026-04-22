@@ -49,7 +49,18 @@ export async function fetchTrending(): Promise<{ feeds: Feed[] } | undefined> {
 
     return res.json();
   } catch (error) {
-    console.log("🚀 podcast-index.ts -> #47 -> error ~", error);
+    console.log("🚀 podcast-index.ts -> #52 -> error ~", error);
+    // return { feeds: [] };
+  }
+}
+
+export async function fetchFeedById(id: string): Promise<{ feed: Feed } | undefined> {
+  try {
+    const res = await fetchIndex(`/podcasts/byfeedid?id=${id}`);
+
+    return res.json();
+  } catch (error) {
+    console.log("🚀 podcast-index.ts -> #63 -> error ~", error);
     // return { feeds: [] };
   }
 }

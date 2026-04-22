@@ -23,6 +23,14 @@ export default function HomeLayout() {
           ),
         }}
       />
+      <Stack.Screen
+        name="[id]"
+        options={{
+          title: "",
+          headerBackButtonDisplayMode: "minimal",
+          headerTransparent: true,
+        }}
+      />
     </Stack>
   );
 }
