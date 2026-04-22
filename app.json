@@ -38,7 +38,14 @@
       "reactCompiler": true
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-audio",
+        {
+          "enableBackgroundPlayback": true
+        }
+      ],
+      "expo-sqlite"
     ],
     "extra": {
       "router": {},
