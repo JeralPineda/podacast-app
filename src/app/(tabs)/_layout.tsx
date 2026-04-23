@@ -1,6 +1,10 @@
+import { MiniPlayer } from "@/components/mini-player";
+import { usePlayer } from "@/providers/player-provider";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 
 export default function TabsLayout() {
+  const { episode } = usePlayer();
+
   return (
     <NativeTabs minimizeBehavior="onScrollDown" tintColor={"magenta"}>
       <NativeTabs.Trigger name="home">
@@ -15,6 +19,12 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Icon sf="books.vertical.fill" md="library_books" />
         <NativeTabs.Trigger.Label>Library</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
+
+      {episode && (
+        <NativeTabs.BottomAccessory>
+          <MiniPlayer />
+        </NativeTabs.BottomAccessory>
+      )}
     </NativeTabs>
   );
 }
