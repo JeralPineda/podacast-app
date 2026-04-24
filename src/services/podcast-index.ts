@@ -75,3 +75,12 @@ export async function fetchEpisodesByFeedId(
     console.log("🚀 podcast-index.ts -> #73 -> error ~", error);
   }
 }
+
+export async function searchPodcasts(term: string): Promise<{ feeds: Feed[] } | undefined> {
+  try {
+    const res = await fetchIndex(`/search/byterm?q=${encodeURIComponent(term)}`);
+    return res.json();
+  } catch (error) {
+    console.log("🚀 podcast-index.ts -> #85 -> error ~", error);
+  }
+}
