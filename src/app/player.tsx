@@ -1,9 +1,11 @@
 import { usePlayer } from "@/providers/player-provider";
 import { Redirect } from "expo-router";
-import { Image, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Image, Pressable, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Slider from "@react-native-community/slider";
 import { useState } from "react";
+import { useDownloadsStore } from "@/store/useDowloadsStore";
+import { deleteEpisodeDownload, downloadEpisode } from "@/services/dowloads";
 
 const PLAYBACK_RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
@@ -12,6 +14,8 @@ export default function Player() {
   const [isSeeking, setIsSeeking] = useState(false);
   const [seekValue, setSeekValue] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
+  const { addDownload, removeDownload, isDownloaded: checkDownloaded } = useDownloadsStore();
+  const isDownloaded = episode ? checkDownloaded(episode.guid) : false;
 
   if (!episode) {
     return <Redirect href="/home" />;
@@ -34,7 +38,42 @@ export default function Player() {
     player.seekTo(Math.min(duration, playerStatus.currentTime + 30));
   };
 
-  const onPressDowload = () => {};
+  const onPressDowload = async () => {
+    if (isDownloading) return;
+    if (isDownloaded) {
+      Alert.alert("Remove Download", "Delete the downloaded episode?", [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            deleteEpisodeDownload(episode.id);
+            removeDownload(episode.guid);
+          },
+        },
+      ]);
+      return;
+    }
+    setIsDownloading(true);
+    try {
+      const localUri = await downloadEpisode(episode.id, episode.enclosureUrl);
+      addDownload({
+        guid: episode.guid,
+        title: episode.title,
+        image: episode.image || episode.feedImage,
+        feedId: String(episode.feedId),
+        feedTitle: episode.feedTitle,
+        localUri,
+        downloadedAt: Date.now(),
+        episodeData: episode,
+      });
+    } catch (e) {
+      console.log(e);
+      Alert.alert("Download Failed", "Could not download the episode.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <View className="flex-1 bg-white px-6 pt-4">
@@ -60,7 +99,17 @@ export default function Player() {
           </Text>
         </View>
 
-        <Pressable onPress={onPressDowload}></Pressable>
+        <Pressable onPress={onPressDowload}>
+          {isDownloading ? (
+            <ActivityIndicator size="small" />
+          ) : (
+            <Ionicons
+              name={isDownloaded ? "checkmark-circle" : "arrow-down-circle-outline"}
+              size={28}
+              color={isDownloaded ? "#3b82f6" : "#9ca3af"}
+            />
+          )}
+        </Pressable>
       </View>
 
       {/* Progress bar */}

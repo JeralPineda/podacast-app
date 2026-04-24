@@ -1,3 +1,4 @@
+import { useDownloadsStore } from "@/store/useDowloadsStore";
 import { Episode } from "@/types";
 import {
   AudioPlayer,
@@ -31,14 +32,13 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     });
   }, []);
 
-  // const getDownload = useDownloadsStore((s) => s.getDownload);
+  const getDownload = useDownloadsStore((s) => s.getDownload);
 
   const setActiveEpisode = (episode: Episode | null) => {
     setEpisode(episode);
 
-    // const download = episode ? getDownload(episode.guid) : undefined;
-    // player.replace({ uri: download?.localUri ?? episode?.enclosureUrl });
-    player.replace({ uri: episode?.enclosureUrl });
+    const download = episode ? getDownload(episode.guid) : undefined;
+    player.replace({ uri: download?.localUri ?? episode?.enclosureUrl });
 
     // Adjust with actual data
     player.setActiveForLockScreen(true, {
