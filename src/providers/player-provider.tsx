@@ -1,6 +1,12 @@
 import { Episode } from "@/types";
-import { AudioPlayer, AudioStatus, createAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { createContext, PropsWithChildren, use, useState } from "react";
+import {
+  AudioPlayer,
+  AudioStatus,
+  createAudioPlayer,
+  setAudioModeAsync,
+  useAudioPlayerStatus,
+} from "expo-audio";
+import { createContext, PropsWithChildren, use, useEffect, useState } from "react";
 
 type PlayerContextType = {
   episode: Episode | null;
@@ -16,6 +22,16 @@ const player = createAudioPlayer(null, { updateInterval: 500 });
 export default function PlayerProvider({ children }: PropsWithChildren) {
   const [episode, setEpisode] = useState<Episode | null>(null);
   const status = useAudioPlayerStatus(player);
+
+  useEffect(() => {
+    setAudioModeAsync({
+      playsInSilentMode: true,
+      shouldPlayInBackground: true,
+      interruptionMode: "doNotMix",
+    });
+  }, []);
+
+  // const getDownload = useDownloadsStore((s) => s.getDownload);
 
   const setActiveEpisode = (episode: Episode | null) => {
     setEpisode(episode);
